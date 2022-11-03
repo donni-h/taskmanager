@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd
+      http://www.liquibase.org/xml/ns/pro
+      http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd">
+    <changeSet author="hannes.donner" id="1">
+        <createTable tableName="scheduled_tasks">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="title" type="varchar(255)"/>
+            <column name="description" type="clob"/>
+            <column name="intervall" type="varchar(45)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="start" type="datetime"/>
+            <column name="end" type="datetime"/>
+            <column name="repetitions" type="int"/>
+            <column name="repetitions_left" type="int"/>
+            <column name="length" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="weekday" type="int"/>
+            <column name="special_length" type="varchar(10)"/>
+            <column name="month" type="int"/>
+            <column name="day" type="int"/>
+            <column name="next_schedule" type="datetime"/>
+        </createTable>
+        <createTable tableName="tasks">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="title" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="clob"/>
+            <column name="finished" type="datetime"/>
+            <column name="due_date" type="datetime"/>
+            <column name="scheduled_task_id" type="int">
+                <constraints foreignKeyName="fk_tasks_scheduled_task_id_scheduled_tasks_id" references="scheduled_tasks(id)"/>
+            </column>
+        </createTable>
+        <createTable tableName="responsibilities">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(45)"/>
+            <column name="email" type="varchar(45)"/>
+            <column name="scheduled_task_id" type="int">
+                <constraints foreignKeyName="fk_responsibilities_scheduled_task_id_scheduled_tasks_id" references="scheduled_tasks(id)"/>
+            </column>
+            <column name="task_id" type="int">
+                <constraints foreignKeyName="fk_task_id" references="tasks(id)"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
